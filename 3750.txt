@@ -51,39 +51,41 @@ interface Vlan1
 exit
 !
 interface Vlan501
- description "Test Network"
- ip address 10.127.0.1 255.255.255.128
+	description "Test Network"
+	ip address 10.127.0.1 255.255.255.128
+	ip ospf hello-interval 20
+	ip ospf dead-interval 20
 exit
 !
 !
 ip dhcp excluded-address 10.127.0.1 10.127.0.20
 !
 ip dhcp pool users
- network 10.127.0.0 255.255.255.128
- default-router 10.127.0.1 
- dns-server 8.8.8.8 8.8.4.4
- domain-name corp.warbyparker.com
+	network 10.127.0.0 255.255.255.128
+	default-router 10.127.0.1 
+	dns-server 8.8.8.8 8.8.4.4
+	domain-name corp.warbyparker.com
 exit
 !
 ip routing
 !
 int range gi 1/0/1-48
- description "User Port"
- switchport access vlan 501
- switchport mode access
+	description "User Port"
+	switchport access vlan 501
+	switchport mode access
 !
 router ospf 1
-neighbor 10.2.2.1
-neighbor 10.2.2.2
-neighbor 10.2.2.3
-passive-interface default
-no passive-interface vlan 506
- network 10.2.2.0 0.0.0.255 area 2
- network 10.127.0.0 0.0.0.127 area 2
- network 10.127.0.128 0.0.0.127 area 2
- network 10.127.1.0 0.0.0.127 area 2
- network 10.127.1.128 0.0.0.63 area 2
- network 10.127.1.192 0.0.0.63 area 2
+	neighbor 10.2.2.1
+	neighbor 10.2.2.2
+	neighbor 10.2.2.3
+	passive-interface default
+	no passive-interface vlan 506
+	network 10.2.2.0 0.0.0.255 area 2
+	network 10.127.0.0 0.0.0.127 area 2
+	network 10.127.0.128 0.0.0.127 area 2
+	network 10.127.1.0 0.0.0.127 area 2
+	network 10.127.1.128 0.0.0.63 area 2
+	network 10.127.1.192 0.0.0.63 area 2
 exit
 !
 
