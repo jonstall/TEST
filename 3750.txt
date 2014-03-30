@@ -47,7 +47,7 @@ name "User Network"
 exit
 !
 interface Vlan1
- shutdown
+ no shutdown
 exit
 !
 interface Vlan501
