@@ -1,0 +1,89 @@
+enable
+configure terminal
+hostname hostname
+enable secret enable
+!
+service password-encryption
+service tcp-keepalives-in
+service tcp-keepalives-out
+no service tcp-small-servers
+no service udp-small-servers
+no ip http server
+no ip http secure-server
+no ip source-route
+!
+ip name-server 8.8.8.8 8.8.4.4 
+ntp server pool.ntp.org
+ip dhcp snooping
+ip dhcp snooping vlan 501,502,503,504,505,506
+login block-for 100 attempts 5 within 100
+logging buffered 4096
+no lldp run 
+no service pad
+no ip finger
+no service config
+no boot host dhcp
+scheduler interval 500
+vtp mode off
+logging trap 4
+!
+snmp-server community DSKvshdu6ENnnFg29x80 RO
+!
+aaa new-model
+aaa authentication login default local
+ip domain name example.com
+crypto key generate rsa
+2048
+IP SSH version 2
+username root privilege 0 secret root
+!
+line vty 0 15
+transport input ssh
+exec-timeout 60
+exit
+!
+vlan 501
+name "User Network"
+exit
+!
+interface Vlan1
+ shutdown
+exit
+!
+interface Vlan501
+ description "Test Network"
+ ip address 10.127.0.1 255.255.255.128
+exit
+!
+!
+ip dhcp excluded-address 10.127.0.1 10.127.0.20
+!
+ip dhcp pool users
+ network 10.127.0.0 255.255.255.128
+ default-router 10.127.0.1 
+ dns-server 8.8.8.8 8.8.4.4
+ domain-name corp.warbyparker.com
+exit
+!
+ip routing
+!
+int range gi 1/0/1-48
+ description "User Port"
+ switchport access vlan 501
+ switchport mode access
+!
+router ospf 1
+neighbor 10.2.2.1
+neighbor 10.2.2.2
+neighbor 10.2.2.3
+passive-interface default
+no passive-interface vlan 506
+ network 10.2.2.0 0.0.0.255 area 2
+ network 10.127.0.0 0.0.0.127 area 2
+ network 10.127.0.128 0.0.0.127 area 2
+ network 10.127.1.0 0.0.0.127 area 2
+ network 10.127.1.128 0.0.0.63 area 2
+ network 10.127.1.192 0.0.0.63 area 2
+exit
+!
+
